@@ -56,7 +56,8 @@ const size_t CACHE_LINE = 64;
 
 SmallVector<FieldDecl *, 64> Bucket::randomize() {
   // TODO use seed
-  auto rng = std::default_random_engine{};
+  std::seed_seq Seq(randstruct_seed.begin(), randstruct_seed.end());
+  auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(fields), std::end(fields), rng);
   return fields;
 }
@@ -106,7 +107,8 @@ bool BitfieldRun::isBitfieldRun() const {
 }
 
 SmallVector<Decl *, 64> randomize(SmallVector<Decl *, 64> fields) {
-  auto rng = std::default_random_engine{};
+  std::seed_seq Seq(randstruct_seed.begin(), randstruct_seed.end());
+  auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(fields), std::end(fields), rng);
   return fields;
 }
@@ -196,7 +198,8 @@ SmallVector<Decl *, 64> perfrandomize(const ASTContext &ctx,
     buckets.push_back(std::move(currentBitfieldRun));
   }
 
-  auto rng = std::default_random_engine{};
+  std::seed_seq Seq(randstruct_seed.begin(), randstruct_seed.end());
+  auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(buckets), std::end(buckets), rng);
 
   // Produce the new ordering of the elements from our buckets.
