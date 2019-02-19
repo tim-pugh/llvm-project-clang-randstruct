@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "LayoutFieldRandomizer.h"
+#include "RandstructSeed.h"
 #include "llvm/ADT/SmallVector.h"
 
 #include <algorithm>
@@ -56,7 +57,7 @@ const size_t CACHE_LINE = 64;
 
 SmallVector<FieldDecl *, 64> Bucket::randomize() {
   // TODO use seed
-  std::seed_seq Seq(randstruct_seed.begin(), randstruct_seed.end());
+  std::seed_seq Seq(RandstructSeed.begin(), RandstructSeed.end());
   auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(fields), std::end(fields), rng);
   return fields;
@@ -107,7 +108,7 @@ bool BitfieldRun::isBitfieldRun() const {
 }
 
 SmallVector<Decl *, 64> randomize(SmallVector<Decl *, 64> fields) {
-  std::seed_seq Seq(randstruct_seed.begin(), randstruct_seed.end());
+  std::seed_seq Seq(RandstructSeed.begin(), RandstructSeed.end());
   auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(fields), std::end(fields), rng);
   return fields;
@@ -198,7 +199,7 @@ SmallVector<Decl *, 64> perfrandomize(const ASTContext &ctx,
     buckets.push_back(std::move(currentBitfieldRun));
   }
 
-  std::seed_seq Seq(randstruct_seed.begin(), randstruct_seed.end());
+  std::seed_seq Seq(RandstructSeed.begin(), RandstructSeed.end());
   auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(buckets), std::end(buckets), rng);
 

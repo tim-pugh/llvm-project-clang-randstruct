@@ -22,9 +22,6 @@ namespace clang {
 // members into a cache line.
 SmallVector<Decl *, 64> rearrange(const ASTContext &ctx,
                                   SmallVector<Decl *, 64> fields);
-// Horrible, kludgey implementation of randomization seed
-// please don't use
-std::string randstruct_seed = "0xDEADBEEF";
 } // namespace clang
 
 #endif
