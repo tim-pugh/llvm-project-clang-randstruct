@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "LayoutFieldRandomizer.h"
 #include "clang/AST/RecordLayout.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/AST/ASTDiagnostic.h"
@@ -16,6 +15,7 @@
 #include "clang/AST/DeclCXX.h"
 #include "clang/AST/DeclObjC.h"
 #include "clang/AST/Expr.h"
+#include "clang/AST/RecordFieldReorganizer.h"
 #include "clang/Basic/TargetInfo.h"
 #include "llvm/ADT/SmallSet.h"
 #include "llvm/Support/Format.h"
@@ -2989,16 +2989,8 @@ ASTContext::getASTRecordLayout(const RecordDecl *D) const {
 
   bool ShouldBeRandomized = D->getAttr<RandomizeLayoutAttr>() != nullptr;
   if (ShouldBeRandomized) {
-      // A staging area to easily reorder the fields
-      SmallVector<Decl *, 64> fields;
-      for (auto f : D->fields()) {
-        fields.push_back(f);
-      }
-
-      fields = rearrange(*this, fields);
-
-      // This will rebuild the Decl chain of fields
-      D->reorderFields(fields);
+	  Randstruct randstruct;
+	  randstruct.reorganizeFields(*this, D);
   }
 
   if (isMsLayout(*this)) {

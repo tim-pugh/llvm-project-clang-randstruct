@@ -65,6 +65,7 @@ class Module;
 class NamespaceDecl;
 class ParmVarDecl;
 class RecordDecl;
+class RecordFieldReorganizer;
 class Stmt;
 class StringLiteral;
 class TagDecl;
@@ -3813,8 +3814,6 @@ public:
   /// Finds the first data member which has a name.
   /// nullptr is returned if no named data member exists.
   const FieldDecl *findFirstNamedDataMember() const;
-
-  void reorderFields(ArrayRef<Decl *> Decls) const;
 
 private:
   /// Deserialize just the fields.
