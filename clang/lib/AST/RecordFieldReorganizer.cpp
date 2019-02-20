@@ -13,13 +13,13 @@
 
 #include "clang/AST/RecordFieldReorganizer.h"
 #include "clang/AST/ASTContext.h"
-#include "RandstructSeed.h"
 
 #include <algorithm>
 #include <cstdint>
 #include <random>
 #include <set>
 #include <vector>
+#include <fstream> // needed for RandstructSeed file kludge
 
 // FIXME: Find a better alternative to SmallVector with hardcoded size!
 
@@ -95,7 +95,12 @@ public:
 const size_t CACHE_LINE = 64;
 
 SmallVector<FieldDecl *, 64> Bucket::randomize() {
-  // FIXME use seed
+  // FIXME use command line switch
+  std::string RandstructSeed;
+  std::ifstream file;
+  file.open("RandstructSeed");
+  std::getline(file,RandstructSeed);
+  file.close();
   std::seed_seq Seq(RandstructSeed.begin(), RandstructSeed.end());
   auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(fields), std::end(fields), rng);
@@ -144,6 +149,12 @@ bool BitfieldRun::canFit(size_t size) const {
 bool BitfieldRun::isBitfieldRun() const { return true; }
 
 SmallVector<Decl *, 64> randomize(SmallVector<Decl *, 64> fields) {
+  // FIXME use command line switch
+  std::string RandstructSeed;
+  std::ifstream file;
+  file.open("RandstructSeed");
+  std::getline(file,RandstructSeed);
+  file.close();
   std::seed_seq Seq(RandstructSeed.begin(), RandstructSeed.end());
   auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(fields), std::end(fields), rng);
@@ -234,6 +245,12 @@ SmallVector<Decl *, 64> perfrandomize(const ASTContext &ctx,
     buckets.push_back(std::move(currentBitfieldRun));
   }
 
+  // FIXME use command line switch
+  std::string RandstructSeed;
+  std::ifstream file;
+  file.open("RandstructSeed");
+  std::getline(file,RandstructSeed);
+  file.close();
   std::seed_seq Seq(RandstructSeed.begin(), RandstructSeed.end());
   auto rng = std::default_random_engine{Seq};
   std::shuffle(std::begin(buckets), std::end(buckets), rng);
