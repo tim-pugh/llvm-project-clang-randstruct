@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "clang/AST/RandstructSeed.h"
 #include "clang/AST/RecordLayout.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/AST/ASTDiagnostic.h"
